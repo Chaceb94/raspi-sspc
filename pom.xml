@@ -59,14 +59,6 @@
 		<!-- GITHUB PROPERTIES -->
 		<github.global.server>github</github.global.server>
 		
-		<!-- DEFAULT RASPBERRY PI PROPERTIES -->
-		<pi.host>pi-sf-wifi</pi.host>
-		<pi.port>22</pi.port>
-		<pi.user>pi</pi.user>
-		<pi.password>raspberry</pi.password>
-		<pi.transfer>true</pi.transfer>
-		<pi.dirCopyTo>/home/pi</pi.dirCopyTo>
-		
 		<pi4j.version>0.0.4</pi4j.version>
 		<commons-daemon.version>1.0.10</commons-daemon.version>
 
@@ -329,94 +321,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<!-- OPTIONALLY DEPLOY THE FINAL .DEB TO THE RASBERRY PI -->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-
-					<!-- copy the .DEB pacakge file to the Raspberry Pi platform platform -->
-					<execution>
-						<id>transfer-compiled-debian-package</id>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<taskdef resource="net/sf/antcontrib/antcontrib.properties"
-									classpathref="maven.plugin.classpath" />
-								<if>
-									<equals arg1="${pi.transfer}" arg2="true" />
-									<then>
-										<!-- copy the JAR file to the Raspberry Pi -->
-										<scp
-											file="${project.build.directory}/${project.build.finalName}.deb"
-											todir="${pi.user}:${pi.password}@${pi.host}:${pi.dirCopyTo}"
-											port="${pi.port}" trust="true" verbose="true" failonerror="true">
-										</scp>
-									</then>
-								</if>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.ant</groupId>
-						<artifactId>ant-jsch</artifactId>
-						<version>1.7.1</version>
-					</dependency>
-					<dependency>
-						<groupId>com.jcraft</groupId>
-						<artifactId>jsch</artifactId>
-						<version>0.1.42</version>
-					</dependency>
-					<dependency>
-						<groupId>ant-contrib</groupId>
-						<artifactId>ant-contrib</artifactId>
-						<version>20020829</version>
-					</dependency>
-				</dependencies>
-			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-dependency-plugin
-										</artifactId>
-										<versionRange>
-											[2.1,)
-										</versionRange>
-										<goals>
-											<goal>
-												copy-dependencies
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>
